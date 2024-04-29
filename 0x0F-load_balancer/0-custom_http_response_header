@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Script to configure Nginx to include a custom HTTP response header
+
+# Install nginx if not already installed
+if ! command -v nginx &>/dev/null; then
+    sudo apt-get update
+    sudo apt-get install -y nginx
+fi
+
+# Define the custom header value
+hostname=$(hostname)
+
+# Configure Nginx to include the custom header
+sudo sed -i '/^http {/a \        server_tokens off;\n        add_header X-Served-By "'"$hostname"'";' /etc/nginx/nginx.conf
+
+# Restart Nginx for changes to take effect
+sudo systemctl restart nginx
