@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Script to install and configure HAProxy as a load balancer
+
+# Install HAProxy
+sudo apt-get update
+sudo apt-get install -y haproxy
+
+# Configure HAProxy
+sudo sed -i 's/.*frontend.*8080.*$/&\n    default_backend servers/' /etc/haproxy/haproxy.cfg
+sudo sed -i '/^frontend.*8080.*/a \    bind *:80' /etc/haproxy/haproxy.cfg
+sudo sed -i '/^backend.*servers.*/a \    server web-01 [STUDENT_ID]-web-01:80 check' /etc/haproxy/haproxy.cfg
+sudo sed -i '/^backend.*servers.*/a \    server web-02 [STUDENT_ID]-web-02:80 check' /etc/haproxy/haproxy.cfg
+
+# Enable HAProxy service
+sudo systemctl enable haproxy
+
+# Start HAProxy service
+sudo systemctl start haproxy
+
