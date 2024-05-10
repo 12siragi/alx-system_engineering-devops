@@ -1,34 +1,19 @@
 #!/usr/bin/env bash
-# Script to audit subdomains of a domain
+# Usage: ./1-world_wide_web <domain> <subdomain>
+# Display information about subdomains.
 
-# Function to display usage information
-usage() {
-    echo "Usage: $0 <domain> [subdomain]"
-    echo "Example: $0 holberton.online"
-    echo "Example: $0 holberton.online web-02"
-    exit 1
+domain_information () {
+    line=$(dig "$2"."$1" | grep -A1 'ANSWER SECTION:' | tr '\t' '\n' | tail -2 | tr '\n' ' ')
+    echo "$2 $line" | awk '{print "The subdomain " $1 " is a " $2 " record and points to " $3}'
 }
 
-# Check if domain argument is provided
-if [ -z "$1" ]; then
-    usage
+if [ "$#" == 1 ]
+then
+  domain_information "$1" "www"
+  domain_information "$1" "lb-01"
+  domain_information "$1" "web-01"
+  domain_information "$1" "web-02"
+elif [ "$#" == 2 ]
+then
+  domain_information "$1" "$2"
 fi
-
-# Set domain and subdomain variables
-domain="$1"
-subdomain="${2:-www lb-01 web-01 web-02}"
-
-# Function to query DNS records and display information
-query_dns() {
-    local sub=$1
-    local result=$(dig "$sub.$domain" +short)
-
-    if [ -n "$result" ]; then
-        echo "The subdomain $sub is a $(dig "$sub.$domain" | awk '/^'${sub}'/ {print $4}') record and points to $result"
-    fi
-}
-
-# Loop through each subdomain and query DNS records
-for sub in $subdomain; do
-    query_dns "$sub"
-done
