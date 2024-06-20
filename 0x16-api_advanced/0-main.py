@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """
-0-main: Entry point for testing the number_of_subscribers function.
+0-main
 """
-
 import sys
 
 if __name__ == '__main__':
