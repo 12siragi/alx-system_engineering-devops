@@ -1,23 +1,7 @@
 #!/usr/bin/env bash
 
-# Install ufw if not already installed
-sudo apt-get update
-sudo apt-get install ufw -y
-
-# Set default policies
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-# Allow specific ports
-sudo ufw allow 22/tcp     # SSH
-sudo ufw allow 443/tcp    # HTTPS
-sudo ufw allow 80/tcp     # HTTP
-
 # Forward port 8080 to port 80
 sudo ufw route allow 8080/tcp to 0.0.0.0 port 80
-
-# Enable ufw
-sudo ufw enable
 
 # Check ufw status
 sudo ufw status verbose
